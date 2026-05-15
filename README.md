@@ -1,36 +1,157 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HireAI Interview Platform
 
-## Getting Started
+A modern, responsive AI-powered interview platform built as a frontend prototype. This application simulates a complete interview experience from candidate onboarding to final evaluation.
 
-First, run the development server:
+## 🚀 Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **UI Components:** Radix UI primitives with shadcn/ui
+- **Icons:** Lucide React
+- **Animations:** Framer Motion
+- **State Management:** React Hooks
+
+## ✨ Features Implemented
+
+### 1. **Landing Screen**
+
+- Platform branding and overview
+- Candidate instructions
+- Estimated interview duration
+
+### 2. **Candidate Form**
+
+- Personal details capture
+- Role and experience level selection
+- Skills input
+- Resume upload UI
+
+### 3. **Interview Setup**
+
+- Device readiness checks (camera, microphone, internet)
+- Interview guidelines
+- Pre-interview checklist
+
+### 4. **AI Interview Screen**
+
+- Interactive AI interviewer avatar
+- Real-time candidate video preview
+- Question navigation (back/next)
+- Recording controls (start, stop, retry, submit)
+- Live transcript display
+- Progress tracking
+- Timer and confidence score
+- Question difficulty badges
+- Waveform visualization
+
+### 5. **Coding Round**
+
+- Multi-language support (JavaScript, TypeScript, Python)
+- Code editor interface
+- Test cases and examples
+- Simulated execution output
+- Submit functionality
+
+### 6. **Summary Screen**
+
+- Interview completion status
+- Candidate profile overview
+- Performance metrics
+- AI evaluation placeholder
+- Strengths and improvement areas
+- Restart demo option
+
+## 🎯 Development Journey
+
+This project was built with a focus on:
+
+1. **Component-based architecture** - Reusable UI components for scalability
+2. **Responsive design** - Mobile-first approach with desktop optimization
+3. **Type safety** - Full TypeScript implementation
+4. **Clean code** - ESLint configuration and best practices
+5. **User experience** - Smooth transitions and intuitive navigation
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- Node.js 20 or higher
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone <repository-url>
+
+# Navigate to project directory
+cd ai-interview-platform
+
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📦 Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Start development server
+npm run dev
 
-## Learn More
+# Build for production
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# Start production server
+npm start
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Run ESLint
+npm run lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Deployment
 
-## Deploy on Vercel
+### Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push this repository to GitHub
+2. Import the repository in [Vercel](https://vercel.com)
+3. Keep the framework preset as **Next.js**
+4. Use default settings:
+   - **Install Command:** `npm install`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** (leave empty)
+5. Deploy!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No environment variables required for this frontend prototype.
+
+## 📁 Project Structure
+
+```
+src/
+├── app/              # Next.js app router pages
+├── components/       # React components
+│   ├── ui/          # Reusable UI primitives
+│   └── ...          # Feature components
+├── data/            # Mock data and types
+└── lib/             # Utility functions
+```
+
+## 🎨 Design Highlights
+
+- Clean, modern interface
+- Consistent color scheme
+- Accessible UI components
+- Smooth animations and transitions
+- Responsive layouts for all screen sizes
+
+## 📝 License
+
+This project is a frontend prototype for demonstration purposes.
+
+---
+
+Built with ❤️ using Next.js and TypeScript
