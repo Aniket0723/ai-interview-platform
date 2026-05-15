@@ -49,10 +49,19 @@ export function SummaryScreen({
     interviewStats.attemptedQuestions > 0
       ? interviewStats.attemptedQuestions
       : interviewStats.totalQuestions;
-  const timeTaken =
-    interviewStats.elapsedMinutes > 0
-      ? `${interviewStats.elapsedMinutes} min`
-      : "28 min";
+  // Compute precise elapsed time if start and submit timestamps are available
+  let timeTaken = "28 min";
+  if (interviewStats.submittedAt && interviewStats.interviewStartedAt) {
+    const start = new Date(interviewStats.interviewStartedAt).getTime();
+    const end = new Date(interviewStats.submittedAt).getTime();
+    const diffMs = Math.max(0, end - start);
+    const totalSeconds = Math.round(diffMs / 1000);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    timeTaken = secs === 0 ? `${mins} min` : `${mins} min ${secs} sec`;
+  } else if (interviewStats.elapsedMinutes > 0) {
+    timeTaken = `${interviewStats.elapsedMinutes} min`;
+  }
   const codingAttempted =
     interviewStats.status === "Submitted for Review" &&
     attemptedQuestions >= interviewStats.totalQuestions;
@@ -75,7 +84,7 @@ export function SummaryScreen({
         title="Interview Summary"
       />
 
-      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 md:grid-cols-[minmax(0,1fr)_320px] lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="min-w-0 space-y-4 sm:space-y-5">
           <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-100 bg-slate-950 p-4 text-white sm:p-6">
@@ -108,6 +117,12 @@ export function SummaryScreen({
                   <p className="mt-1 text-[11px] text-emerald-100/80 sm:text-xs">
                     Submitted for Review
                   </p>
+                  {interviewStats.submittedAt && (
+                    <p className="mt-1 text-[11px] text-emerald-100/80 sm:text-xs">
+                      Submitted:{" "}
+                      {new Date(interviewStats.submittedAt).toLocaleString()}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -152,23 +167,21 @@ export function SummaryScreen({
           </div>
 
           <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex items-start gap-4">
+            <div className="flex items-center gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                 <Sparkles className="size-5" aria-hidden="true" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-950">
-                  AI evaluation placeholder
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  The candidate demonstrated solid communication, role
-                  awareness, and technical reasoning. In a production system,
-                  this section would include rubric scores, transcript
-                  highlights, coding assessment details, and recruiter notes
-                  generated from the AI interview session.
-                </p>
-              </div>
+              <p className="text-xs font-semibold text-slate-950 sm:text-sm">
+                AI evaluation placeholder
+              </p>
             </div>
+            <p className="mt-3 text-xs sm:text-sm leading-5 sm:leading-6 text-slate-600">
+              The candidate demonstrated solid communication, role awareness,
+              and technical reasoning. In a production system, this section
+              would include rubric scores, transcript highlights, coding
+              assessment details, and recruiter notes generated from the AI
+              interview session.
+            </p>
           </div>
         </div>
 
@@ -310,9 +323,12 @@ type ProfileRowProps = {
 
 function ProfileRow({ label, value }: ProfileRowProps) {
   return (
-    <div className="grid grid-cols-[88px_minmax(0,1fr)] gap-3 border-b border-slate-100 pb-2.5 last:border-0 last:pb-0 sm:flex sm:items-start sm:justify-between sm:gap-4 sm:pb-3">
-      <p className="text-[11px] text-slate-500 sm:text-xs">{label}</p>
-      <p className="min-w-0 break-words text-right text-xs font-medium text-slate-900 sm:max-w-48 sm:text-sm">
+    <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5 last:border-0 last:pb-0 sm:pb-3">
+      <p className="shrink-0 text-[11px] text-slate-500 sm:text-xs">{label}</p>
+      <p
+        className="min-w-0 truncate text-right text-xs font-medium text-slate-900 sm:text-sm"
+        title={value}
+      >
         {value}
       </p>
     </div>

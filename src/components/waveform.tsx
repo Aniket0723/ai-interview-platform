@@ -5,14 +5,21 @@ import { motion } from "framer-motion";
 type WaveformProps = {
   active?: boolean;
   className?: string;
+  frameClassName?: string;
 };
 
 const bars = [28, 44, 32, 58, 38, 68, 46, 54, 34, 64, 42, 52, 30, 48];
 
-export function Waveform({ active = false, className }: WaveformProps) {
+export function Waveform({
+  active = false,
+  className,
+  frameClassName = "h-16",
+}: WaveformProps) {
   return (
     <div className={className} aria-label={active ? "Recording audio" : "Audio idle"}>
-      <div className="flex h-16 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-4">
+      <div
+        className={`flex ${frameClassName} items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-4`}
+      >
         {bars.map((height, index) => (
           <motion.span
             key={`${height}-${index}`}

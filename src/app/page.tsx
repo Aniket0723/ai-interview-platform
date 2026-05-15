@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { CandidateForm } from "@/components/candidate-form";
 import { CodingScreen } from "@/components/coding-screen";
@@ -27,6 +27,11 @@ export default function Home() {
   );
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+  // Global interview timer (30 minutes = 1800 seconds)
+  const INTERVIEW_DURATION = 1800;
+  const [remainingSeconds, setRemainingSeconds] = useState(INTERVIEW_DURATION);
+  const [timerStarted, setTimerStarted] = useState(false);
+
   const codingQuestionIndex = useMemo(
     () =>
       Math.max(
@@ -43,18 +48,65 @@ export default function Home() {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [screen]);
 
-  function goToScreen(nextScreen: ScreenStep) {
-    setScreen(nextScreen);
+  const goToScreen = useCallback(
+    (nextScreen: ScreenStep) => {
+      // Start timer when entering interview screen for the first time
+      if (nextScreen === "interview" && !timerStarted) {
+        setTimerStarted(true);
+      }
+
+      setScreen(nextScreen);
+      setInterviewStats((currentStats) => ({
+        ...currentStats,
+        status:
+          nextScreen === "summary"
+            ? "Submitted for Review"
+            : nextScreen === "interview" || nextScreen === "coding"
+              ? "In progress"
+              : currentStats.status,
+        submittedAt:
+          nextScreen === "summary" && !currentStats.submittedAt
+            ? new Date().toISOString()
+            : currentStats.submittedAt,
+        interviewStartedAt:
+          nextScreen === "interview" && !currentStats.interviewStartedAt
+            ? new Date().toISOString()
+            : currentStats.interviewStartedAt,
+      }));
+    },
+    [timerStarted],
+  );
+
+  const finishInterview = useCallback(() => {
     setInterviewStats((currentStats) => ({
       ...currentStats,
-      status:
-        nextScreen === "summary"
-          ? "Submitted for Review"
-          : nextScreen === "interview" || nextScreen === "coding"
-            ? "In progress"
-            : currentStats.status,
+      attemptedQuestions:
+        currentStats.attemptedQuestions > 0
+          ? currentStats.attemptedQuestions
+          : Math.min(currentQuestionIndex + 1, currentStats.totalQuestions),
+      elapsedMinutes: Math.max(currentStats.elapsedMinutes, 18),
+      status: "Submitted for Review",
     }));
-  }
+    goToScreen("summary");
+  }, [currentQuestionIndex, goToScreen]);
+
+  // Global countdown timer - starts when interview begins
+  useEffect(() => {
+    if (!timerStarted) return;
+
+    const countdownTimer = window.setInterval(() => {
+      setRemainingSeconds((current) => {
+        if (current <= 1) {
+          clearInterval(countdownTimer);
+          finishInterview();
+          return 0;
+        }
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(countdownTimer);
+  }, [finishInterview, timerStarted]);
 
   function moveToNextQuestion(markAttempted: boolean) {
     if (markAttempted) {
@@ -100,19 +152,6 @@ export default function Home() {
         currentStats.totalQuestions,
       ),
       elapsedMinutes: Math.max(currentStats.elapsedMinutes, 28),
-      status: "Submitted for Review",
-    }));
-    goToScreen("summary");
-  }
-
-  function finishInterview() {
-    setInterviewStats((currentStats) => ({
-      ...currentStats,
-      attemptedQuestions:
-        currentStats.attemptedQuestions > 0
-          ? currentStats.attemptedQuestions
-          : Math.min(currentQuestionIndex + 1, currentStats.totalQuestions),
-      elapsedMinutes: Math.max(currentStats.elapsedMinutes, 18),
       status: "Submitted for Review",
     }));
     goToScreen("summary");
@@ -173,6 +212,7 @@ export default function Home() {
           )
         }
         questions={interviewQuestions}
+        remainingSeconds={remainingSeconds}
       />
     );
   }
@@ -187,6 +227,7 @@ export default function Home() {
         }}
         onSubmitCode={submitCode}
         question={codingQuestion}
+        remainingSeconds={remainingSeconds}
       />
     );
   }

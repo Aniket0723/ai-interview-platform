@@ -30,6 +30,8 @@ export type InterviewStats = {
   elapsedMinutes: number;
   confidenceScore: number;
   status: "Not started" | "In progress" | "Submitted for Review";
+  submittedAt?: string;
+  interviewStartedAt?: string;
 };
 
 export const initialCandidateDetails: CandidateDetails = {
@@ -86,6 +88,8 @@ export const initialInterviewStats: InterviewStats = {
   elapsedMinutes: 0,
   confidenceScore: 86,
   status: "Not started",
+  submittedAt: undefined,
+  interviewStartedAt: undefined,
 };
 
 export const candidateInstructions = [

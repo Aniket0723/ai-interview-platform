@@ -117,7 +117,7 @@ export function CandidateForm({
         title="Candidate Details"
       />
 
-      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 md:grid-cols-[minmax(0,1fr)_320px] lg:grid-cols-[minmax(0,1fr)_360px]">
         <form
           className="min-w-0 rounded-lg border border-slate-200 bg-white p-3 shadow-sm sm:p-6"
           onSubmit={(event) => {
@@ -136,7 +136,7 @@ export function CandidateForm({
                   updateField("fullName", event.target.value)
                 }
                 placeholder="Enter your full name"
-                className="h-10 bg-white text-sm placeholder:text-xs focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
+                className="h-10 md:h-9 bg-white text-sm md:text-xs placeholder:text-xs md:placeholder:text-[10px] focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
               />
             </FieldGroup>
 
@@ -147,7 +147,7 @@ export function CandidateForm({
                 value={candidateDetails.email}
                 onChange={(event) => updateField("email", event.target.value)}
                 placeholder="name@example.com"
-                className="h-10 bg-white text-sm placeholder:text-xs focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
+                className="h-10 md:h-9 bg-white text-sm md:text-xs placeholder:text-xs md:placeholder:text-[10px] focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
               />
             </FieldGroup>
 
@@ -171,7 +171,7 @@ export function CandidateForm({
                     }
                   }}
                   placeholder="Frontend Developer"
-                  className="h-10 bg-white text-sm placeholder:text-xs focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
+                  className="h-10 md:h-9 bg-white text-sm md:text-xs placeholder:text-xs md:placeholder:text-[10px] focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
                 />
                 {roleSuggestionsOpen &&
                 roleSearchValue &&
@@ -186,7 +186,7 @@ export function CandidateForm({
                           updateField("roleAppliedFor", role);
                           setRoleSuggestionsOpen(false);
                         }}
-                        className="block w-full px-3 py-2 text-left text-xs font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                        className="block w-full px-3 py-2 text-left text-xs md:text-[10px] font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
                       >
                         {role}
                       </button>
@@ -207,7 +207,7 @@ export function CandidateForm({
               >
                 <SelectTrigger
                   id="experienceLevel"
-                  className="h-10 w-full bg-white text-sm focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
+                  className="h-10 md:h-9 w-full bg-white text-sm md:text-xs focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:h-11"
                 >
                   <SelectValue placeholder="Select experience level" />
                 </SelectTrigger>
@@ -232,7 +232,7 @@ export function CandidateForm({
                   key={role}
                   type="button"
                   onClick={() => updateField("roleAppliedFor", role)}
-                  className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 sm:px-3 sm:text-xs"
+                  className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] md:text-[10px] font-medium text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 sm:px-3 sm:text-xs"
                 >
                   {role}
                 </button>
@@ -247,7 +247,7 @@ export function CandidateForm({
                 value={candidateDetails.skills}
                 onChange={(event) => updateField("skills", event.target.value)}
                 placeholder="Example: React, Next.js, TypeScript, REST APIs"
-                className="min-h-16 resize-none bg-white text-sm placeholder:text-xs focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:min-h-20"
+                className="min-h-16 md:min-h-14 resize-none bg-white text-sm md:text-xs placeholder:text-xs md:placeholder:text-[10px] focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:min-h-20"
               />
               <div className="mt-2 flex flex-wrap gap-2">
                 {skillSuggestions.map((skill) => (
@@ -255,7 +255,7 @@ export function CandidateForm({
                     key={skill}
                     type="button"
                     onClick={() => appendSkill(skill)}
-                    className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 sm:px-3 sm:text-xs"
+                    className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] md:text-[10px] font-medium text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 sm:px-3 sm:text-xs"
                   >
                     + {skill}
                   </button>
@@ -265,7 +265,7 @@ export function CandidateForm({
           </div>
 
           <div className="mt-5">
-            <Label className="text-xs text-slate-800 sm:text-sm">
+            <Label className="text-xs md:text-[11px] text-slate-800 sm:text-sm">
               Upload Resume
             </Label>
             <label
@@ -276,10 +276,10 @@ export function CandidateForm({
                 <FileUp className="size-4" aria-hidden="true" />
               </span>
               <span className="min-w-0">
-                <span className="block truncate text-xs font-medium text-slate-950 sm:text-sm">
+                <span className="block truncate text-xs md:text-[11px] font-medium text-slate-950 sm:text-sm">
                   {candidateDetails.resumeFileName || "Upload resume"}
                 </span>
-                <span className="mt-1 block text-[11px] leading-4 text-slate-500 sm:text-xs sm:leading-5">
+                <span className="mt-1 block text-[11px] md:text-[10px] leading-4 text-slate-500 sm:text-xs sm:leading-5">
                   PDF, DOC, or DOCX. UI placeholder only.
                 </span>
               </span>
@@ -299,14 +299,14 @@ export function CandidateForm({
           </div>
 
           <div className="mt-5 flex flex-col-reverse gap-3 border-t border-slate-100 pt-4 sm:mt-6 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
-            <p className="text-[11px] leading-4 text-slate-500 sm:text-xs sm:leading-5">
+            <p className="text-[11px] md:text-[10px] leading-4 text-slate-500 sm:text-xs sm:leading-5">
               Resume upload is optional. All required fields above must be
               completed before setup.
             </p>
             <Button
               type="submit"
               disabled={!canContinue}
-              className="h-10 w-full bg-blue-600 px-5 text-sm text-white hover:bg-blue-700 sm:h-11 sm:w-auto"
+              className="h-10 md:h-9 w-full bg-blue-600 px-5 md:px-4 text-sm md:text-xs text-white hover:bg-blue-700 sm:h-11 sm:w-auto"
             >
               Continue
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -318,14 +318,14 @@ export function CandidateForm({
           <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[11px] font-semibold uppercase text-slate-950 sm:text-xs">
+                <p className="text-[11px] md:text-[10px] font-semibold uppercase text-slate-950 sm:text-xs">
                   Profile completion
                 </p>
-                <p className="mt-1 text-[11px] text-slate-500">
+                <p className="mt-1 text-[11px] md:text-[10px] text-slate-500">
                   Required candidate fields
                 </p>
               </div>
-              <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700 ring-1 ring-blue-100">
+              <span className="rounded-full bg-blue-50 px-3 py-1 text-sm md:text-xs font-semibold text-blue-700 ring-1 ring-blue-100">
                 {completionPercentage}%
               </span>
             </div>
@@ -365,10 +365,10 @@ export function CandidateForm({
                 <Sparkles className="size-5" aria-hidden="true" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-blue-950">
+                <p className="text-sm md:text-xs font-semibold text-blue-950">
                   AI personalization
                 </p>
-                <p className="mt-2 text-sm leading-6 text-blue-800">
+                <p className="mt-2 text-sm md:text-xs md:leading-5 leading-6 text-blue-800">
                   The interview can adapt question wording to the selected role,
                   experience level, and skills once the real AI layer is
                   connected.
@@ -378,11 +378,11 @@ export function CandidateForm({
           </div>
 
           <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 sm:p-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
+            <div className="flex items-center gap-2 text-sm md:text-xs font-semibold text-emerald-800">
               <ShieldCheck className="size-4" aria-hidden="true" />
               Candidate privacy
             </div>
-            <p className="mt-2 text-sm leading-6 text-emerald-800">
+            <p className="mt-2 text-sm md:text-xs md:leading-5 leading-6 text-emerald-800">
               This prototype keeps details in local React state only. No backend
               submission is performed.
             </p>
@@ -403,7 +403,10 @@ type FieldGroupProps = {
 function FieldGroup({ children, htmlFor, icon: Icon, label }: FieldGroupProps) {
   return (
     <div className="min-w-0">
-      <Label htmlFor={htmlFor} className="h-5 text-xs text-slate-800 sm:text-sm">
+      <Label
+        htmlFor={htmlFor}
+        className="h-5 text-xs md:text-[11px] text-slate-800 sm:text-sm"
+      >
         {Icon ? (
           <Icon className="size-4 text-slate-400" aria-hidden="true" />
         ) : null}
@@ -421,13 +424,15 @@ type ChecklistItemProps = {
 
 function ChecklistItem({ complete, label }: ChecklistItemProps) {
   return (
-    <div className="flex items-center justify-between gap-3 text-sm">
+    <div className="flex items-center justify-between gap-3 text-sm md:text-xs">
       <span className={complete ? "text-slate-700" : "text-slate-400"}>
         {label}
       </span>
       <CheckCircle2
         className={
-          complete ? "size-4 text-emerald-600" : "size-4 text-slate-300"
+          complete
+            ? "size-4 md:size-3 text-emerald-600"
+            : "size-4 md:size-3 text-slate-300"
         }
         aria-hidden="true"
       />

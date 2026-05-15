@@ -33,6 +33,7 @@ type CodingScreenProps = {
   onBackToInterview: () => void;
   onSubmitCode: () => void;
   question: InterviewQuestion;
+  remainingSeconds: number;
 };
 
 const languages = [
@@ -99,6 +100,7 @@ export function CodingScreen({
   onBackToInterview,
   onSubmitCode,
   question,
+  remainingSeconds,
 }: CodingScreenProps) {
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState(starterCode.javascript);
@@ -111,8 +113,14 @@ export function CodingScreen({
   const candidateName = candidateDetails.fullName || "Candidate";
   const roleName = candidateDetails.roleAppliedFor || "Interview role";
 
+  const countdownLabel = useMemo(
+    () => formatTimer(remainingSeconds),
+    [remainingSeconds],
+  );
+
   const lineNumbers = useMemo(
-    () => Array.from({ length: code.split("\n").length }, (_, index) => index + 1),
+    () =>
+      Array.from({ length: code.split("\n").length }, (_, index) => index + 1),
     [code],
   );
 
@@ -183,7 +191,7 @@ export function CodingScreen({
         />
       ) : null}
 
-      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 lg:grid-cols-[minmax(280px,390px)_minmax(0,1fr)]">
+      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 md:grid-cols-[minmax(240px,320px)_minmax(0,1fr)] lg:grid-cols-[minmax(280px,390px)_minmax(0,1fr)]">
         <aside className="min-w-0 space-y-4 sm:space-y-5">
           <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm sm:p-5">
             <div className="flex items-start justify-between gap-3">
@@ -212,7 +220,12 @@ export function CodingScreen({
             </p>
 
             <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-5 sm:gap-3">
-              <InfoTile icon={Clock3} label="Time" value="10 min" />
+              <InfoTile
+                icon={Clock3}
+                label="Time Remaining"
+                value={countdownLabel}
+                isWarning={remainingSeconds < 300}
+              />
               <InfoTile icon={Code2} label="Type" value="Algorithm" />
             </div>
           </div>
@@ -391,16 +404,34 @@ type InfoTileProps = {
   icon: ElementType;
   label: string;
   value: string;
+  isWarning?: boolean;
 };
 
-function InfoTile({ icon: Icon, label, value }: InfoTileProps) {
+function InfoTile({ icon: Icon, label, value, isWarning }: InfoTileProps) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-2.5 sm:p-3">
-      <div className="flex items-center gap-1.5 text-[11px] text-slate-500 sm:gap-2 sm:text-xs">
-        <Icon className="size-3.5 text-blue-600 sm:size-4" aria-hidden="true" />
+    <div
+      className={`rounded-lg border p-2.5 sm:p-3 ${
+        isWarning ? "border-red-200 bg-red-50" : "border-slate-200 bg-slate-50"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-1.5 text-[11px] sm:gap-2 sm:text-xs ${
+          isWarning ? "text-red-600" : "text-slate-500"
+        }`}
+      >
+        <Icon
+          className={`size-3.5 sm:size-4 ${
+            isWarning ? "text-red-600" : "text-blue-600"
+          }`}
+          aria-hidden="true"
+        />
         {label}
       </div>
-      <p className="mt-1.5 text-xs font-semibold text-slate-950 sm:mt-2 sm:text-sm">
+      <p
+        className={`mt-1.5 text-xs font-semibold sm:mt-2 sm:text-sm ${
+          isWarning ? "text-red-700" : "text-slate-950"
+        }`}
+      >
         {value}
       </p>
     </div>
@@ -428,7 +459,10 @@ type CandidateVideoControlProps = {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
-function CandidateVideoControl({ active, onClick }: CandidateVideoControlProps) {
+function CandidateVideoControl({
+  active,
+  onClick,
+}: CandidateVideoControlProps) {
   return (
     <Button
       type="button"
@@ -512,4 +546,12 @@ function CandidateVideoPreview({
       </div>
     </div>
   );
+}
+
+function formatTimer(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+  return `${minutes}:${seconds}`;
 }

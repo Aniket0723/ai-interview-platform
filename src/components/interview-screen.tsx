@@ -10,7 +10,6 @@ import {
   Code2,
   Gauge,
   Pause,
-  Play,
   Mic,
   StopCircle,
   RotateCcw,
@@ -45,6 +44,7 @@ type InterviewScreenProps = {
   onPreviousQuestion?: () => void;
   onNextQuestion?: () => void;
   questions: InterviewQuestion[];
+  remainingSeconds: number;
 };
 
 const transcriptLines = [
@@ -80,11 +80,11 @@ export function InterviewScreen({
   onPreviousQuestion,
   onNextQuestion,
   questions,
+  remainingSeconds,
 }: InterviewScreenProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [hasRecording, setHasRecording] = useState(false);
-  const [isReviewPlaying, setIsReviewPlaying] = useState(false);
 
   const question = questions[currentQuestionIndex] ?? questions[0];
   const progressPercentage = Math.round(
@@ -96,6 +96,11 @@ export function InterviewScreen({
   const timerLabel = useMemo(
     () => formatTimer(elapsedSeconds),
     [elapsedSeconds],
+  );
+
+  const countdownLabel = useMemo(
+    () => formatTimer(remainingSeconds),
+    [remainingSeconds],
   );
 
   useEffect(() => {
@@ -114,7 +119,6 @@ export function InterviewScreen({
     if (isRecording) {
       setIsRecording(false);
       setHasRecording(false);
-      setIsReviewPlaying(false);
       setElapsedSeconds(0);
       onSubmitAnswer();
       return;
@@ -122,7 +126,6 @@ export function InterviewScreen({
 
     if (hasRecording) {
       setHasRecording(false);
-      setIsReviewPlaying(false);
       setElapsedSeconds(0);
       onSubmitAnswer();
     }
@@ -131,7 +134,6 @@ export function InterviewScreen({
   function handleSkipQuestion() {
     setIsRecording(false);
     setHasRecording(false);
-    setIsReviewPlaying(false);
     setElapsedSeconds(0);
     onSkipQuestion();
   }
@@ -139,13 +141,11 @@ export function InterviewScreen({
   function endRecording() {
     setIsRecording(false);
     setHasRecording(true);
-    setIsReviewPlaying(false);
   }
 
   function retryRecording() {
     setIsRecording(false);
     setHasRecording(false);
-    setIsReviewPlaying(false);
     setElapsedSeconds(0);
   }
 
@@ -168,11 +168,16 @@ export function InterviewScreen({
         title="AI Interview"
       />
 
-      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <section className="grid flex-1 gap-4 pb-5 pt-1 sm:gap-5 sm:pb-7 sm:pt-2 md:grid-cols-[minmax(0,1fr)_320px] lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="min-w-0 space-y-4 sm:space-y-5">
           <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
             <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
-              <SessionMetric icon={Timer} label="Timer" value={timerLabel} />
+              <SessionMetric
+                icon={Timer}
+                label="Time Remaining"
+                value={countdownLabel}
+                isWarning={remainingSeconds < 300}
+              />
               <SessionMetric
                 icon={Radio}
                 label="Recording"
@@ -388,7 +393,6 @@ export function InterviewScreen({
                       onClick={() => {
                         setElapsedSeconds(0);
                         setIsRecording(true);
-                        setIsReviewPlaying(false);
                       }}
                       className="h-9 bg-blue-600 px-2 text-xs text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:px-3 sm:text-sm"
                       disabled={isRecording || hasRecording}
@@ -416,23 +420,6 @@ export function InterviewScreen({
                     >
                       <RotateCcw className="size-4" aria-hidden="true" />
                       Retry
-                    </Button>
-
-                    <Button
-                      type="button"
-                      onClick={() =>
-                        setIsReviewPlaying((currentValue) => !currentValue)
-                      }
-                      variant="outline"
-                      className="h-9 border-blue-200 bg-white px-2 text-xs text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:px-3 sm:text-sm"
-                      disabled={!hasRecording || isRecording}
-                    >
-                      {isReviewPlaying ? (
-                        <Pause className="size-4" aria-hidden="true" />
-                      ) : (
-                        <Play className="size-4" aria-hidden="true" />
-                      )}
-                      {isReviewPlaying ? "Pause" : "Play"}
                     </Button>
 
                     <Button
@@ -584,16 +571,39 @@ type SessionMetricProps = {
   icon: ElementType;
   label: string;
   value: string;
+  isWarning?: boolean;
 };
 
-function SessionMetric({ icon: Icon, label, value }: SessionMetricProps) {
+function SessionMetric({
+  icon: Icon,
+  label,
+  value,
+  isWarning,
+}: SessionMetricProps) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-2.5 sm:p-3">
-      <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 sm:gap-2 sm:text-xs">
-        <Icon className="size-3.5 text-blue-600 sm:size-4" aria-hidden="true" />
+    <div
+      className={`rounded-lg border p-2.5 sm:p-3 ${
+        isWarning ? "border-red-200 bg-red-50" : "border-slate-200 bg-slate-50"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-1.5 text-[11px] font-medium sm:gap-2 sm:text-xs ${
+          isWarning ? "text-red-600" : "text-slate-500"
+        }`}
+      >
+        <Icon
+          className={`size-3.5 sm:size-4 ${
+            isWarning ? "text-red-600" : "text-blue-600"
+          }`}
+          aria-hidden="true"
+        />
         {label}
       </div>
-      <p className="mt-1.5 text-xs font-semibold text-slate-950 sm:mt-2 sm:text-sm">
+      <p
+        className={`mt-1.5 text-xs font-semibold sm:mt-2 sm:text-sm ${
+          isWarning ? "text-red-700" : "text-slate-950"
+        }`}
+      >
         {value}
       </p>
     </div>
